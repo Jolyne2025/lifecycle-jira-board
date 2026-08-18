@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lifecycle Jira Ticket 总表（对外版 · 2026-08-18）</title>
+<style>
+  :root {
+    --bg: #f5f6fa; --card: #fff; --ink: #1f2430; --muted: #6b7280; --line: #e5e7eb;
+    --blue: #2563eb; --blue-bg: #eff6ff; --green: #16a34a; --green-bg: #f0fdf4;
+    --red: #dc2626; --red-bg: #fef2f2; --amber: #d97706; --amber-bg: #fffbeb;
+    --purple: #7c3aed; --purple-bg: #f5f3ff; --teal: #0d9488; --teal-bg: #f0fdfa;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: var(--bg); color: var(--ink); line-height: 1.6; padding: 28px 16px 60px;
+  }
+  .wrap { max-width: 1280px; margin: 0 auto; }
+  header {
+    background: linear-gradient(135deg, #134e4a, #0d9488); border-radius: 14px;
+    padding: 24px 32px; color: #fff; margin-bottom: 22px; box-shadow: 0 6px 20px rgba(13,148,136,.25);
+  }
+  header h1 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+  header .meta { font-size: 13px; opacity: .88; }
+  header .badges { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .badge {
+    display: inline-block; padding: 2px 10px; border-radius: 999px;
+    font-size: 11px; font-weight: 600; white-space: nowrap;
+  }
+  .badge.light { background: rgba(255,255,255,.16); color: #fff; }
+  .badge.b { background: var(--blue-bg); color: var(--blue); border: 1px solid #bfdbfe; }
+  .badge.g { background: var(--green-bg); color: var(--green); border: 1px solid #bbf7d0; }
+  .badge.r { background: var(--red-bg); color: var(--red); border: 1px solid #fecaca; }
+  .badge.a { background: var(--amber-bg); color: var(--amber); border: 1px solid #fde68a; }
+  .badge.p { background: var(--purple-bg); color: var(--purple); border: 1px solid #ddd6fe; }
+  .badge.t { background: var(--teal-bg); color: var(--teal); border: 1px solid #99f6e4; }
+  .badge.gray { background: #f3f4f6; color: #4b5563; border: 1px solid #e5e7eb; }
+
+  .epic-card {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 12px; margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,.04);
+    overflow: hidden;
+  }
+  .epic-header {
+    background: #f8fafc; padding: 13px 20px; border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+  .epic-header .name { font-size: 15.5px; font-weight: 700; color: var(--teal); }
+  .epic-header .epic-badge { font-size: 11px; background: #ccfbf1; color: #0f766e; border-radius: 6px; padding: 2px 8px; }
+  .epic-link, .title-link { color: var(--blue); text-decoration: none; font-weight: 500; }
+  .epic-link:hover, .title-link:hover { text-decoration: underline; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th {
+    background: #f1f5f9; color: #475569; font-weight: 600;
+    padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--line);
+    font-size: 12px; white-space: nowrap;
+  }
+  tbody td { padding: 7px 12px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+  tbody tr:hover { background: #fafbfe; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
+  .ticket-link { color: var(--blue); text-decoration: none; font-weight: 500; }
+  .ticket-link:hover { text-decoration: underline; }
+  .en { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; color: #0f766e; }
+  .sub { border-left: 3px solid #5eead4; margin-left: 8px; }
+
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; margin: 16px 0; }
+  .summary-card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+    padding: 12px 16px; text-align: center;
+  }
+  .summary-card .num { font-size: 22px; font-weight: 700; color: var(--teal); }
+  .summary-card .lbl { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  .rule-box {
+    border-left: 4px solid var(--amber); background: var(--amber-bg);
+    padding: 12px 18px; border-radius: 0 10px 10px 0; margin: 18px 0;
+    font-size: 13.5px;
+  }
+  .rule-box code {
+    background: #fef3c7; padding: 1px 6px; border-radius: 4px;
+    font-family: ui-monospace, monospace; font-size: 12.5px;
+  }
+  h2.section-title {
+    font-size: 17px; font-weight: 700; margin: 28px 0 14px;
+    padding-left: 10px; border-left: 4px solid var(--teal);
+  }
+  .status-tag { display: inline-block; padding: 1px 8px; border-radius: 6px; font-size: 11.5px; font-weight: 600; }
+  .st-sched { background: var(--amber-bg); color: var(--amber); border: 1px solid #fde68a; }
+  .st-dev { background: var(--blue-bg); color: var(--blue); border: 1px solid #bfdbfe; }
+  .st-done { background: var(--green-bg); color: var(--green); border: 1px solid #bbf7d0; }
+  .st-closed { background: #f3f4f6; color: #4b5563; border: 1px solid #e5e7eb; }
+  .st-backlog { background: var(--purple-bg); color: var(--purple); border: 1px solid #ddd6fe; }
+  .st-watch { background: var(--red-bg); color: var(--red); border: 1px solid #fecaca; }
+  .st-new { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+  .st-ip { background: var(--teal-bg); color: var(--teal); border: 1px solid #99f6e4; }
+  .st-prd { background: var(--purple-bg); color: var(--purple); border: 1px solid #ddd6fe; }
+  .st-triage { background: var(--amber-bg); color: var(--amber); border: 1px solid #fde68a; }
+  .pri { display: inline-block; padding: 1px 9px; border-radius: 6px; font-size: 11px; font-weight: 700; }
+  .pri-p0 { background: var(--red-bg); color: var(--red); border: 1px solid #fecaca; }
+  .pri-p1 { background: var(--amber-bg); color: var(--amber); border: 1px solid #fde68a; }
+  .pri-p2 { background: #f3f4f6; color: #64748b; border: 1px solid #e5e7eb; }
+  .foot-note { font-size: 12.5px; color: var(--muted); background: var(--card); border: 1px dashed var(--line); border-radius: 10px; padding: 10px 16px; margin-top: 14px; }
+  footer { text-align: center; color: var(--muted); font-size: 12px; margin-top: 24px; }
+  @media (max-width: 760px) { table { font-size: 12px; } td, th { padding: 5px 8px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Lifecycle Jira Ticket 总表</h1>
+  <div class="meta">2026-08-18 ｜ 5 板块 Epic · 17 UC Ticket（8 新建）· 18 关联工单 · 状态口径自 Jira 字段同步 · <a href="https://visable.atlassian.net/browse/UC-107" target="_blank" style="color:#99f6e4">UC-107</a> · 数据源：Jira</div>
+  <div class="badges">
+    <span class="badge light">🎯 FY27 目标 UC-107</span>
+    <span class="badge light">💬 Push（UC-248）</span>
+    <span class="badge light">📧 EDM（UC-416）</span>
+    <span class="badge light">💬 WhatsApp（UC-247）</span>
+    <span class="badge light">📋 订阅收集（UC-180）</span>
+    <span class="badge light">🔬 数据归因（UC-253）</span>
+  </div>
+</header>
+
+<div class="rule-box">
+  <strong>统一规则</strong><br>
+  ① 层级：业务线目标（UC-107）→ 渠道板块 Epic → Ticket；一次评审 = 一个 Ticket<br>
+  ② 字段：<code>Business Area: UG - Lifecycle</code> ｜ <code>Dependency Scope</code>（Dev / Data / Product / PGS / Business）｜ <code>Dependency Status</code><br>
+  ③ 优先级：<b style="color:var(--red)">P0</b> 进行中/高影响（评审 DDL、数据断裂、异常需跟）｜<b style="color:var(--amber)">P1</b> 待排期/重要｜<b style="color:var(--muted)">P2</b> 待调研/一般<br>
+  ④ 依赖范围：<b>Dev</b>=研发执行（ARISE 侧）｜<b>Data</b>=数据/看板（WA/DE/DA）｜<b>Product</b>=产品/设计｜<b>PGS</b>=产品研发团队（PGS 侧）｜<b>Business</b>=业务侧无外部依赖｜<b>—</b>=已完成/不适用
+</div>
+
+<!-- ===== 目标层 ===== -->
+<div class="epic-card">
+  <div class="epic-header"><span class="epic-badge">Goal</span><span class="name">🎯 Lifecycle 目标</span><a class="epic-link" href="https://visable.atlassian.net/browse/UC-107" target="_blank">UC-107</a></div>
+  <table>
+    <thead><tr><th style="width:140px">Ticket</th><th style="width:300px">标题</th><th style="width:60px">优先级</th><th style="width:170px">状态</th><th style="width:96px">依赖范围</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td class="mono"><a class="ticket-link" href="https://visable.atlassian.net/browse/UC-107" target="_blank">UC-107</a></td><td><a class="title-link" href="https://visable.atlassian.net/browse/UC-107" target="_blank">Lifecycle Marketing — FY27 Goal（D-AB2 1 → 18，D-UV 907 → 4,333）</a></td><td><span class="pri pri-p0">P0</span></td><td><span class="status-tag st-ip">In Progress</span></td><td><span class="badge gray" style="min-width:44px;text-align:center">Business</span></td><td><span class="badge b">🎯 父级目标</span> 业务线总目标（Task，与 UC-105/106 同构）；关联全部渠道板块 Epic（UC-248/416/247/180/253）；月度目标拆解见 ticket 描述</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ===== Epic 1：Push ===== -->
+<div class="epic-card">
+  <div class="epic-header"><span class="epic-badge">Epic 1</span><a class="epic-link" href="https://visable.atlassian.net/browse/UC-248" target="_blank"><span class="name">💬 Push 触达与激活（一期 UC-120/121/122 + 二期 UC-248）</span></a></div>
+  <table>
+    <thead><tr><th style="width:140px">Ticket</th><th style="width:300px">标题</th><th style="width:60px">优先级</th><th style="width:170px">状态</th><th style="width:96px">依赖范围</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td class="mono"><a class="ticket-link" href="https://visable.atlassian.net/browse/UC-248" target="_blank">UC-248</a></td><td><a class="title-link" href="https://visable.atlassian.net/browse/UC-248" target="_blank">Lifecycle: Push II RFQ-marketing and system messages</a></td><td><span class="pri pri-p0">P0</span></td><td><span class="status-tag st-backlog">To Do</span></td><td><span class="badge b" style="min-width:44px;text-align:center">Dev</span></td><td>Push 板块总 Epic；直接承载 RFQ-marketing + 系统消息执行；一期策略见下；负责人：Jolyne</td></tr>
+      <tr class="sub"><td class="mono"><a class="ticket-link" href="https://visable.atlassian.net/browse/UC-120" target="_blank">UC-120</a></td><td><a class="title-link" href="https://visable.atlassian.net/browse/UC-120" target="_blank">Lifecycle: Buyer Layering（买家分层）</a></td><td><span class="pri pri-p1">P1</span></td><td><span class="status-tag st-done">Done</span></td><td><span class="badge gray" style="min-width:44px;text-align:center">—</span></td><td>Push 一期策略（PRD ARISE-1061）；分层是全部渠道圈人基础；UPR-13（In Delivery）继续演进</td></tr>
+      <tr class="sub"><td class="mono"><a class="ticket-link" href="https://visable.atlassian.net/browse/UC-121" target="_blank">UC-121</a></td><td><a class="title-link" href="https://visable.atlassian.net/browse/UC-121" target="_blank">Lifecycle: Push Scenario Template（策略模板）</a></td><td><span class="pri pri-p1">P1</span></td><td><span class="status-tag st-done">Done</span></td><td><span class="badge gray" style="min-width:44px;text-align:center">—</span></td><td>Push 一期策略（PRD ARISE-1038）；策略清单：UNANSWERED_CONVERSATIONS_REMINDER / PN_PERSONALISED_SEARCH / PN_TRENDING_PRODUCTS / PN_VISITORS / PN_RFQ_marketing / PN_RECOMMENDATION；UPR-14（In Delivery）</td></tr>
+      <tr class="sub"><td class="mono"><a class="ticket-link" href="https://visable.atlassian.net/browse/UC-122" target="_blank">UC-122</a></td><td><a class="title-link" href="https://visable.atlassian.net/browse/UC-122" target="_blank">Lifecycle: Push-Led App Retention（App 留存）</a></td><td><span class="pri pri-p1">P1</span></td><td><span class="status-tag st-done">Done</span></td><td><span class="badge gray" style="min-width:44px;text-align:center">—</span></td><td>Push 一期策略（Chao Wang）；Personalize EDM and Push journeys with cleaner dedup and measurement；UPR-15（In Delivery）；下挂 0709 行动项</td></tr>
+      <tr class="sub"><td class="mono">UPR-13/14/15</td><td>Buyer Layering / Push Scenario Template / Push-Led App Retention（Roadmap）</td><td><span class="pri pri-p1">P1</span></td><td><span class="status-tag st-ip">In Delivery</span></td><td><span class="badge a" style="min-width:44px;text-align:center">Product</span></td><td><span class="badge t">🔗 Relates·UPR</span> 分别关联 UC-120 / UC-121 / UC-122；UPR 侧推进中，UC 侧已完成</td></tr>
+      <tr><td class="mono"><a class="ticket-link" href="https://visable.atlassian.net/browse/ARISE-1219" target="_blank">ARISE-1219</a></td><td><a class="title-link" href="https://visable.atlassian.net/browse/ARISE-1219" target="_blank">【Incident Action-0709】Real-time Push message monitoring</a></td><td><span class="pri pri-p0">P0</span></td><td><span class="status-tag st-ip">In Progress</span></td><td><span class="badge b" style="min-width:44px;text-align:center">Dev</span></td><td>0709 事故行动项（Chao Wang）；挂 UC-122</td></tr>
+      <tr><td class="mono"><a class="ticket-link" href="https://visable.atlassian.net/browse/ARISE-1220" target="_blank">ARISE-1220</a></td><td><a class="title-link" href="https://visable.atlassian.net/browse/ARISE-1220" target="_blank">【Incident Action-0709】Whitelist protection for push messages</a></td><td><span class="pri pri-p0">P0</span></td><td><span class="status-tag st-ip">In Progress</span></td><td><span class="badge b" style="min-width:44px;text-align:center">Dev</span></td><td>0709 事故行动项（Feng Chen）；挂 UC-122</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ===== Epic 2：EDM ===== -->
+<div class="epic-card">
+  <div class="epic-header"><span class="epic-badge">Epic 2</span><a class="epic-link" href="https://visable.atlassian.net/browse/UC-416" target="_blank"><span class="name">📧 EDM 邮件策略</span></a></div>
+  <table>
+    <thead><tr><th style="width:140px">Ticket</th><th style="width:300px">标题</th><th style="width:60px">优先级</th><th style="width:170px">状态</th><th style="width:96px">依赖范围</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td class="mono"><a class="ticket-link" href="https://visable.atlassian.net/browse/UC-416" target="_blank">UC-416</a></td><td><a class="title-link" href="https://visable.atlassian.net/browse/UC-416" target="_blank">[Lifecycle] EDM: Product Recommendation &amp; Engagement（品搜推荐策略优化：重发逻辑修复 + 频率控制）</a></td><td><span class="pri pri-p0">P0</span></td><td><span class="status-tag st-triage">Triage</span><span class="badge a" style="margin-left:6px">评审中 8.18</span></td><td><span class="badge b" style="min-width:44px;text-align:center">Dev</span></td><td>EDM 板块总 Epic/主票；8.18 评审中；已下线整改（0806）：CW32 发送 -50%、AB -32%；预期 AB2 增量 +2/日；下挂 PGS-254/312/856；数据依赖 UC-363（Epic 5）</td></tr>
+      <tr class="sub"><td class="mono">PGS-254 / PGS-312 / PGS-856</td><td>品搜推荐原始 PRD / 发送频率与重发逻辑（PGS 侧）</td><td><span class="pri pri-p0">P0</span></td><td><span class="status-tag st-closed">PGS 侧管理</span></td><td><span class="badge t" style="min-width:44px;text-align:center">PGS</span></td><td><span class="badge t">🔗 Relates·PGS</span> 关联 UC-416；重发逻辑 Bug 源头；保持引用</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ===== Epic 3：WhatsApp ===== -->
+<div class="epic-card">
+  <div class="epic-header"><span class="epic-badge">Epic 3</span><a class="epic-link" href="https://visable.atlassian.net/browse/UC-247" target="_blank"><span class="name">💬 WhatsApp 新渠道</span></a></div>
+  <table>
+    <thead><tr><th style="width:140px">Ticket</th><th style="width:300px">标题</th><th style="width:60px">优先级</th><th style="width:170px">状态</th><th style="width:96px">依赖范围</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td class="mono"><a class="ticket-link" href="https://visable.atlassian.net/browse/UC-247" target="_blank">UC-247</a></td><td><a class="title-link" href="https://visable.atlassian.net/browse/UC-247" target="_blank">Lifecycle: Whatsapp new channel release</a></td><td><span class="pri pri-p0">P0</span></td><td><span class="status-tag st-backlog">To Do</span></td><td><span class="badge b" style="min-width:44px;text-align:center">Dev</span></td><td>WhatsApp 板块总 Epic；BRD v1.2 已发布（8/17）；北极星：日均 AB2 ≥ 8（系统 ≥3 + 营销 ≥5）；订阅 67k 目标；9 月预算 €500/月（8/19 前给 Bilancetti）；负责人：Yunrui Si</td></tr>
+      <tr class="sub"><td class="mono"><a class="ticket-link" href="https://visable.atlassian.net/browse/UC-417" target="_blank">UC-417</a></td><td class="en"><a class="title-link" href="https://visable.atlassian.net/browse/UC-417" target="_blank">[Lifecycle] WhatsApp: System Messages（Follow-up Reminder &amp; Conversation Alert）</a></td><td><span class="pri pri-p0">P0</span></td><td><span class="status-tag st-new">To Be Scheduled</span></td><td><span class="badge b" style="min-width:44px;text-align:center">Dev</span></td><td>挂 UC-247；策略评审：Utkarsha；目标 AB2 ≥3/日；护栏：送达 ≥90%、退订 &lt;5%。<br><span class="en">Scope: ① follow-up reminders for unanswered RFQ conversations; ② conversation alerts (new replies/updates) to re-engage buyers. Buyer response rate wlw 26% → 28% / ep 29% → 31%.</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ===== Epic 4：订阅收集 ===== -->
+<div class="epic-card">
+  <div class="epic-header"><span class="epic-badge">Epic 4</span><a class="epic-link" href="https://visable.atlassian.net/browse/UC-180" target="_blank"><span class="name">📋 订阅收集与 Onboarding</span></a></div>
+  <table>
+    <thead><tr><th style="width:140px">Ticket</th><th style="width:300px">标题</th><th style="width:60px">优先级</th><th style="width:170px">状态</th><th style="width:96px">依赖范围</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td class="mono"><a class="ticket-link" href="https://visable.atlassian.net/browse/UC-180" target="_blank">UC-180</a></td><td><a class="title-link" href="https://visable.atlassian.net/browse/UC-180" target="_blank">Lifecycle: Add subscription entries to onboarding</a></td><td><span class="pri pri-p1">P1</span></td><td><span class="status-tag st-backlog">To Do</span></td><td><span class="badge b" style="min-width:44px;text-align:center">Dev</span></td><td>订阅收集总 Epic；承载 WhatsApp 订阅入口 + 授权中心；负责人：Jolyne</td></tr>
+      <tr class="sub"><td class="mono"><a class="ticket-link" href="https://visable.atlassian.net/browse/UC-418" target="_blank">UC-418</a></td><td class="en"><a class="title-link" href="https://visable.atlassian.net/browse/UC-418" target="_blank">[Lifecycle] WhatsApp: Subscription Entry &amp; Consent Collection</a></td><td><span class="pri pri-p0">P0</span></td><td><span class="status-tag st-new">To Be Scheduled</span></td><td><span class="badge b" style="min-width:44px;text-align:center">Dev</span></td><td>挂 UC-180；订阅入口（onboarding/站内）+ 合规授权；财年底 67,000 订阅目标（WhatsApp）；BRD 一期最关键前置</td></tr>
+      <tr class="sub"><td class="mono"><a class="ticket-link" href="https://visable.atlassian.net/browse/UC-419" target="_blank">UC-419</a></td><td class="en"><a class="title-link" href="https://visable.atlassian.net/browse/UC-419" target="_blank">[Lifecycle] WhatsApp: Marketing Messages（订阅池圈人漏斗）</a></td><td><span class="pri pri-p1">P1</span></td><td><span class="status-tag st-new">To Be Scheduled</span></td><td><span class="badge b" style="min-width:44px;text-align:center">Dev</span></td><td>挂 UC-180；订阅池圈人漏斗：圈人 4%/日 → 触达 UV ≥160/日；贡献日均 AB2 ≥ 5；护栏：送达 ≥90%、退订 &lt;5%</td></tr>
+      <tr class="sub"><td class="mono"><a class="ticket-link" href="https://visable.atlassian.net/browse/UC-420" target="_blank">UC-420</a></td><td class="en"><a class="title-link" href="https://visable.atlassian.net/browse/UC-420" target="_blank">[Lifecycle] Subscription: Consent &amp; Preference Center</a></td><td><span class="pri pri-p2">P2</span></td><td><span class="status-tag st-prd">业务 PRD</span></td><td><span class="badge a" style="min-width:44px;text-align:center">Product</span></td><td>挂 UC-180；统一授权中心（渠道/频率/退订）；合规护栏</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ===== Epic 5：数据与归因 ===== -->
+<div class="epic-card">
+  <div class="epic-header"><span class="epic-badge">Epic 5</span><a class="epic-link" href="https://visable.atlassian.net/browse/UC-253" target="_blank"><span class="name">🔬 数据与归因基建</span></a></div>
+  <table>
+    <thead><tr><th style="width:140px">Ticket</th><th style="width:300px">标题</th><th style="width:60px">优先级</th><th style="width:170px">状态</th><th style="width:96px">依赖范围</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td class="mono"><a class="ticket-link" href="https://visable.atlassian.net/browse/UC-253" target="_blank">UC-253</a></td><td><a class="title-link" href="https://visable.atlassian.net/browse/UC-253" target="_blank">[Lifecycle] Data &amp; Attribution Infrastructure</a></td><td><span class="pri pri-p0">P0</span></td><td><span class="status-tag st-ip">In Progress</span></td><td><span class="badge p" style="min-width:44px;text-align:center">Data</span></td><td>数据与归因总 Epic（原名 [data] AB attribution by strategy definition）；负责人：Kailiang；策略级 AB 归因口径（session 首唤渠道+创意策略）；8/17 归因逻辑文档确认回执跟进中；Push 仅 ~5% 可归因；挂全量数据类工单</td></tr>
+      <tr class="sub"><td class="mono"><a class="ticket-link" href="https://visable.atlassian.net/browse/ARISE-915" target="_blank">ARISE-915</a></td><td><a class="title-link" href="https://visable.atlassian.net/browse/ARISE-915" target="_blank">Add Push attribution to App Source</a></td><td><span class="pri pri-p1">P1</span></td><td><span class="status-tag st-backlog">To Do</span></td><td><span class="badge b" style="min-width:44px;text-align:center">Dev</span></td><td><span class="badge t">🔗 Relates·ARISE</span> 挂 UC-253；父票 ARISE-911；Push 归因进 App Source；DAN-719 挂本票下</td></tr>
+      <tr class="sub"><td class="mono"><a class="ticket-link" href="https://visable.atlassian.net/browse/DAN-719" target="_blank">DAN-719</a></td><td><a class="title-link" href="https://visable.atlassian.net/browse/DAN-719" target="_blank">App AB dashboard: add Push as a Source dimension</a></td><td><span class="pri pri-p1">P1</span></td><td><span class="status-tag st-watch">Feedback</span></td><td><span class="badge p" style="min-width:44px;text-align:center">Data</span></td><td><span class="badge t">🔗 Relates·DAN</span> 挂 ARISE-915；负责人：Olga；Push 源维度进 AB 看板（CPDA-411 下）</td></tr>
+      <tr class="sub"><td class="mono"><a class="ticket-link" href="https://visable.atlassian.net/browse/UC-363" target="_blank">UC-363</a></td><td><a class="title-link" href="https://visable.atlassian.net/browse/UC-363" target="_blank">EDM Email Template Attribution - DA Requirement</a></td><td><span class="pri pri-p0">P0</span></td><td><span class="status-tag st-ip">In Progress</span></td><td><span class="badge p" style="min-width:44px;text-align:center">Data</span></td><td><span class="badge t">🔗 Relates·UC</span> 挂 UC-253；负责人：Vaishnavi；event_content 维度到 metrics_layer，模板级归因（EDM 板块依赖）；8/13 已提需</td></tr>
+      <tr class="sub"><td class="mono"><a class="ticket-link" href="https://visable.atlassian.net/browse/DAN-704" target="_blank">DAN-704</a></td><td><a class="title-link" href="https://visable.atlassian.net/browse/DAN-704" target="_blank">Weekly RFQ Digest Email Performance Tracking &amp; Reporting</a></td><td><span class="pri pri-p2">P2</span></td><td><span class="status-tag st-watch">Feedback</span></td><td><span class="badge p" style="min-width:44px;text-align:center">Data</span></td><td><span class="badge t">🔗 Relates·DAN</span> 挂 UC-253；负责人：Olga；RFQ Digest 邮件周报</td></tr>
+      <tr class="sub"><td class="mono"><a class="ticket-link" href="https://visable.atlassian.net/browse/WA-2336" target="_blank">WA-2336</a></td><td><a class="title-link" href="https://visable.atlassian.net/browse/WA-2336" target="_blank">Hubspot Email Campaigns tracking within GA</a></td><td><span class="pri pri-p1">P1</span></td><td><span class="status-tag st-backlog">Backlog</span></td><td><span class="badge p" style="min-width:44px;text-align:center">Data</span></td><td><span class="badge t">🔗 Relates·WA</span> 挂 UC-253；负责人：Torben；HubSpot 邮件 campaign 进 GA 跟踪</td></tr>
+      <tr class="sub"><td class="mono"><a class="ticket-link" href="https://visable.atlassian.net/browse/WA-2382" target="_blank">WA-2382</a></td><td><a class="title-link" href="https://visable.atlassian.net/browse/WA-2382" target="_blank">Push WA GA layer bullet points（by push_id 全链路）</a></td><td><span class="pri pri-p0">P0</span></td><td><span class="status-tag st-watch">External dependence</span></td><td><span class="badge p" style="min-width:44px;text-align:center">Data</span></td><td><span class="badge t">🔗 Relates·WA</span> 挂 UC-253；负责人：Torben；Push 数据地基，卡点</td></tr>
+      <tr class="sub"><td class="mono"><a class="ticket-link" href="https://visable.atlassian.net/browse/WA-2383" target="_blank">WA-2383</a></td><td><a class="title-link" href="https://visable.atlassian.net/browse/WA-2383" target="_blank">Push first and last name to the dataLayer for QDR and RFQ</a></td><td><span class="pri pri-p1">P1</span></td><td><span class="status-tag st-backlog">Backlog</span></td><td><span class="badge p" style="min-width:44px;text-align:center">Data</span></td><td><span class="badge t">🔗 Relates·WA</span> 挂 UC-253</td></tr>
+      <tr class="sub"><td class="mono"><a class="ticket-link" href="https://visable.atlassian.net/browse/WA-2384" target="_blank">WA-2384</a></td><td><a class="title-link" href="https://visable.atlassian.net/browse/WA-2384" target="_blank">Push place of delivery to the dataLayer for QDR and RFQ</a></td><td><span class="pri pri-p1">P1</span></td><td><span class="status-tag st-backlog">Backlog</span></td><td><span class="badge p" style="min-width:44px;text-align:center">Data</span></td><td><span class="badge t">🔗 Relates·WA</span> 挂 UC-253</td></tr>
+      <tr class="sub"><td class="mono"><a class="ticket-link" href="https://visable.atlassian.net/browse/DAN-679" target="_blank">DAN-679</a></td><td><a class="title-link" href="https://visable.atlassian.net/browse/DAN-679" target="_blank">Mobile app - push notification impact on returning users behaviour</a></td><td><span class="pri pri-p2">P2</span></td><td><span class="status-tag st-backlog">Backlog</span></td><td><span class="badge p" style="min-width:44px;text-align:center">Data</span></td><td><span class="badge t">🔗 Relates·DAN</span> 挂 UC-253；Push 对回访行为影响分析</td></tr>
+      <tr class="sub"><td class="mono"><a class="ticket-link" href="https://visable.atlassian.net/browse/DAN-758" target="_blank">DAN-758</a></td><td><a class="title-link" href="https://visable.atlassian.net/browse/DAN-758" target="_blank">Email Reminder Notifications</a></td><td><span class="pri pri-p2">P2</span></td><td><span class="status-tag st-backlog">Backlog</span></td><td><span class="badge p" style="min-width:44px;text-align:center">Data</span></td><td><span class="badge t">🔗 Relates·DAN</span> 挂 UC-253；负责人：Olga；邮件提醒通知（催复场景参照）</td></tr>
+      <tr class="sub"><td class="mono"><a class="ticket-link" href="https://visable.atlassian.net/browse/UC-421" target="_blank">UC-421</a></td><td class="en"><a class="title-link" href="https://visable.atlassian.net/browse/UC-421" target="_blank">[Lifecycle] Data: Push receive label 映射完善（覆盖率 70~79% → ≥95%）</a></td><td><span class="pri pri-p1">P1</span></td><td><span class="status-tag st-new">To Be Scheduled</span></td><td><span class="badge p" style="min-width:44px;text-align:center">Data</span></td><td>挂 UC-253；负责人：Kailiang；receive label → UTM 一对多匹配补齐</td></tr>
+      <tr class="sub"><td class="mono"><a class="ticket-link" href="https://visable.atlassian.net/browse/UC-422" target="_blank">UC-422</a></td><td class="en"><a class="title-link" href="https://visable.atlassian.net/browse/UC-422" target="_blank">[Lifecycle] Data: Push UV 权威口径落地 + 渠道/App 级语义确认</a></td><td><span class="pri pri-p1">P1</span></td><td><span class="status-tag st-new">To Be Scheduled</span></td><td><span class="badge p" style="min-width:44px;text-align:center">Data</span></td><td>挂 UC-253；负责人：Kailiang；ga_user_metrics 无 push 渠道值；open UV=staging session_medium 可对齐；receive UV 待映射</td></tr>
+      <tr class="sub"><td class="mono"><a class="ticket-link" href="https://visable.atlassian.net/browse/UC-423" target="_blank">UC-423</a></td><td class="en"><a class="title-link" href="https://visable.atlassian.net/browse/UC-423" target="_blank">[Lifecycle] Agent: Daily Metrics &amp; Anomaly Reporting Agent</a></td><td><span class="pri pri-p1">P1</span></td><td><span class="status-tag st-new">To Be Scheduled</span></td><td><span class="badge p" style="min-width:44px;text-align:center">Data</span></td><td>挂 UC-253；push/EDM/WhatsApp 日口径自动巡检（对齐 Lifecycle Engine Weekly）；下挂 ARISE-1296</td></tr>
+      <tr class="sub"><td class="mono"><a class="ticket-link" href="https://visable.atlassian.net/browse/ARISE-1296" target="_blank">ARISE-1296</a></td><td><a class="title-link" href="https://visable.atlassian.net/browse/ARISE-1296" target="_blank">Lifecycle agent 建设</a></td><td><span class="pri pri-p1">P1</span></td><td><span class="status-tag st-backlog">Backlog</span></td><td><span class="badge b" style="min-width:44px;text-align:center">Dev</span></td><td><span class="badge t">🔗 Relates·ARISE</span> 挂 UC-423；负责人：Shuo Huang；Agent 脚手架/知识库/工作流（技术侧自管，业务侧跟踪）</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="summary-grid">
+  <div class="summary-card"><div class="num">5</div><div class="lbl">🏗 板块 Epic（UC-248 / UC-416 / UC-247 / UC-180 / UC-253）</div></div>
+  <div class="summary-card"><div class="num">17</div><div class="lbl">🎫 UC Ticket（含 8 新建）</div></div>
+  <div class="summary-card"><div class="num">18</div><div class="lbl">🔗 关联工单（ARISE / WA / DAN / UPR / PGS）</div></div>
+  <div class="summary-card"><div class="num" style="color:var(--red)">11</div><div class="lbl">📊 P0 高优（评审 DDL / 数据断裂 / 异常跟进）</div></div>
+</div>
+
+<div class="foot-note">
+  📌 状态口径：① <b>Triage</b> = 新立/评审中；② <b>To Be Scheduled</b> = 已 ready 待技术排期；③ <b>In Progress</b> = 推进中；④ <b>Feedback / Backlog</b> = 外部依赖/队列中；⑤ <b>Done / Closed</b> = 已完成。<br>
+  📌 关键节点：<b>8.18</b> EDM 品搜推荐评审（UC-416）；<b>8.19 前</b> WhatsApp 9 月预算 €500/月 → Bilancetti。<br>
+  📌 数据现状（2026-08-17 盘点）：Push 归因仅 ~5% 可追溯；receive label 映射覆盖 70~79%；EDM 发送侧（HubSpot）与行为侧（GA）不可关联 —— 对应修复票见 Epic 5（UC-421/422、UC-363）。
+</div>
+
+<footer>2026-08-18 · Lifecycle Jira Ticket 总表（对外版）· 供 8-9 月需求排期协作</footer>
+</div>
+</body>
+</html>
